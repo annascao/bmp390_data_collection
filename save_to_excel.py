@@ -27,9 +27,8 @@ try:
         data_list.append([temperature, pressure, altitude])
 
 except KeyboardInterrupt: # keyboard interrupt (Ctrl+C) to exit and save data
-    excel_file_path = os.path.join('C:/Desktop', 'bmp390data.xlsx')
     df = pd.DataFrame(data_list, columns=['Temperature (*C)', 'Pressure (hPa)', 'Altitude (m)'])
-    df.to_excel(excel_file_path , index=False)
+    df.to_excel('bmp390data.xlsx', index=False)
 
 finally:
     ser.close()
