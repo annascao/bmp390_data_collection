@@ -116,10 +116,10 @@ int main(void)
     HAL_Delay(500);
 
     // Saving to microSD card
-	sprintf(string, "T: %.2f P: %.2f A: %.2f\n", data.temperature, data.pressure / 100.0, altitude);
-	f_mount(&fs, "", 0);
-	f_open(&fil, "test.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_READ);
-	f_lseek(&fil, fil.fsize);
+    sprintf(string, "T: %.2f P: %.2f A: %.2f\n", data.temperature, data.pressure / 100.0, altitude);
+    f_mount(&fs, "", 0);
+    f_open(&fil, "test.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_READ);
+    f_lseek(&fil, fil.fsize);
     f_puts(string, &fil);
     f_close(&fil);
 
