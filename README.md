@@ -1,6 +1,6 @@
 # bmp390_data_collection
 
-## BNO055 EXAMPLE
+## BMP390 EXAMPLE
 
 ```c
 /* USER CODE END Header */
@@ -101,10 +101,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      comp_data data = bmp390_getData(&calib);
-	  double altitude = bmp390_getAltitude(data.pressure / 100.0);
-	  printf("temp = %.5f, press = %.5f, alt = %.5f\r\n", data.temperature, data.pressure/100.0, altitude);
-	  HAL_Delay(500);
+    comp_data data = bmp390_getData(&calib);
+    double altitude = bmp390_getAltitude(data.pressure / 100.0);
+    printf("temp = %.5f, press = %.5f, alt = %.5f\r\n", data.temperature, data.pressure/100.0, altitude);
+    HAL_Delay(500);
 
     /* USER CODE END WHILE */
 
