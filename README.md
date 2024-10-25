@@ -6,6 +6,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -34,7 +35,11 @@ I2C_HandleTypeDef hi2c1;
 
 UART_HandleTypeDef huart1;
 
+SPI_HandleTypeDef hspi2;
+
 /* USER CODE BEGIN PV */
+FATFS fs;
+FIL fil;
 
 /* USER CODE END PV */
 
@@ -43,6 +48,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_SPI2_Init(void);
 /* USER CODE BEGIN PFP */
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 
@@ -70,6 +76,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  char string[30] = {'\0'};
 
   /* USER CODE END Init */
 
@@ -84,6 +91,8 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_USART1_UART_Init();
+  MX_SPI2_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 
   bmp390_assignI2C(&hi2c1);
@@ -102,9 +111,17 @@ int main(void)
   while (1)
   {
     comp_data data = bmp390_getData(&calib);
-    double altitude = bmp390_getAltitude(data.pressure / 100.0);
+    double altitude = 44330.0 * (1.0 - pow((data.pressure/100.0) / 1013.25, 0.1903));
     printf("temp = %.5f, press = %.5f, alt = %.5f\r\n", data.temperature, data.pressure/100.0, altitude);
     HAL_Delay(500);
+
+    // Saving to microSD card
+	sprintf(string, "T: %.2f P: %.2f A: %.2f\n", data.temperature, data.pressure / 100.0, altitude);
+	f_mount(&fs, "", 0);
+	f_open(&fil, "test.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_READ);
+	f_lseek(&fil, fil.fsize);
+    f_puts(string, &fil);
+    f_close(&fil);
 
     /* USER CODE END WHILE */
 
